@@ -1,0 +1,26 @@
+version: '1.0'
+services:
+  mysqldb:
+    image: mysql:latest
+    container_name: mysqldb
+    environment:
+      MYSQL_ROOT_PASSWORD: Demo@123
+      MYSQL_DATABASE: test
+    ports:
+      - "3309:3306"
+    networks:
+      - test-mysql
+  sql_demo:
+    image: spring-image
+    container_name: sql_demo
+    depends_on:
+      - mysqldb
+    ports:
+      - "8080:8080"
+    networks:
+      - test-mysql
+    deploy:
+      restart_policy:
+        condition: on-failure
+networks:
+  test-mysql:
