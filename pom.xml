@@ -91,6 +91,7 @@
 				</configuration>
 			</plugin>
 		</plugins>
+		<finalName>sql_demo_project</finalName>
 	</build>
 
 </project>
