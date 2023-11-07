@@ -7,7 +7,7 @@ import com.example.sqldemo.repository.RoleRepository;
 import org.springframework.stereotype.Service;
 
 @Service
-public class RoleServiceImpl implements RoleService {
+public abstract class RoleServiceImpl implements RoleService {
 
     private final RoleRepository roleRepository;
 
@@ -21,4 +21,6 @@ public class RoleServiceImpl implements RoleService {
         role.setName(name);
         return roleRepository.save(role);
     }
+
+    public abstract void abc();
 }

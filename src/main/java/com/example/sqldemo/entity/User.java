@@ -11,6 +11,7 @@ import java.util.Set;
 @NoArgsConstructor
 @Entity
 @Table(name = "users")
+//@NamedStoredProcedureQueries(@NamedStoredProcedureQuery(name = "firstProcedure", procedureName = "getAllUsers"))
 public class User {
 
     @Id
@@ -27,6 +28,8 @@ public class User {
 
     /*@OneToOne
     Roles roles;*/
+
+    String email;
 
     @JsonIgnore
     @Column(name = "softDelete")

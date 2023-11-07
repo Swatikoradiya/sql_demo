@@ -7,19 +7,25 @@ import com.example.sqldemo.entity.Roles;
 import com.example.sqldemo.entity.User;
 import com.example.sqldemo.enums.Role;
 import com.example.sqldemo.exception.NotFoundException;
+import com.example.sqldemo.producer.KafkaProducer;
 import com.example.sqldemo.repository.RoleRepository;
 import com.example.sqldemo.repository.UserRepository;
 import io.micrometer.common.util.StringUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ObjectUtils;
 
 import java.lang.reflect.InvocationTargetException;
+import java.util.Date;
+import java.util.List;
+
+import static com.example.sqldemo.config.KafkaConfiguration.DEMO;
 
 @Service
 @Slf4j
-public class UserServiceImpl implements UserService {
+public class UserServiceImpl implements UserService, RoleService {
 
     private final ModelMapper modelMapper;
 
@@ -29,11 +35,14 @@ public class UserServiceImpl implements UserService {
 
     private final RoleRepository roleRepository;
 
-    public UserServiceImpl(ModelMapper modelMapper, UserRepository userRepository, NullAwareBeanUtils beanUtils, RoleRepository roleRepository) {
+    private final KafkaProducer kafkaProducer;
+
+    public UserServiceImpl(ModelMapper modelMapper, UserRepository userRepository, NullAwareBeanUtils beanUtils, RoleRepository roleRepository, KafkaProducer kafkaProducer) {
         this.modelMapper = modelMapper;
         this.userRepository = userRepository;
         this.beanUtils = beanUtils;
         this.roleRepository = roleRepository;
+        this.kafkaProducer = kafkaProducer;
     }
 
     @Override
@@ -59,7 +68,13 @@ public class UserServiceImpl implements UserService {
 
         roleRepository.save(role);
 //        user.setRoles(role);
-        return userRepository.save(user);
+
+        User u = userRepository.save(user);
+
+        //Publish in kafka
+        kafkaProducer.publishToKafka(user,DEMO);
+
+        return u;
     }
 
     @Override
@@ -72,5 +87,21 @@ public class UserServiceImpl implements UserService {
     @Override
     public User getUser(Long id) {
         return userRepository.findByIdAndSoftDeleteIsFalse(id).orElseThrow(() -> new NotFoundException(MessageConstant.USER_NOT_FOUND));
+    }
+
+    @Override
+    @Transactional
+    public List<User> getAllUser() {
+        return userRepository.getAllUsers();
+    }
+
+    @Override
+    public Roles updateRoles(Long id, Role name) {
+        return null;
+    }
+
+//    @Scheduled(cron = "0/15")
+    public void testScheduler() {
+        log.info("test scheduler called : {}", new Date());
     }
 }
