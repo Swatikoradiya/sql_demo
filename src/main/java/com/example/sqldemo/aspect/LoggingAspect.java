@@ -13,24 +13,24 @@ public class LoggingAspect {
 
     @Before(value = "execution(* com.example.sqldemo..*.*(..))")
     public void beforeMethod(JoinPoint joinPoint) {
-        log.info("join point : {}", joinPoint.getArgs());
-        log.info("join point : {}", joinPoint.getTarget());
-        log.info("join point : {}", joinPoint.getThis());
-        log.info("Requested to " + joinPoint.getSignature());
+//        log.info("join point : {}", joinPoint.getArgs());
+//        log.info("join point : {}", joinPoint.getTarget());
+//        log.info("join point : {}", joinPoint.getThis());
+//        log.info("Requested to " + joinPoint.getSignature());
     }
 
     @After(value = "execution(* com.example.sqldemo..*.*(..))")
     public void afterMethod(JoinPoint joinPoint) {
-        log.info("join point response : {}", joinPoint.getArgs());
-        log.info("join point response : {}", joinPoint.getTarget());
-        log.info("join point response : {}", joinPoint.getThis());
-
-        log.info("Returned response from " + joinPoint.getSignature());
+//        log.info("join point response : {}", joinPoint.getArgs());
+//        log.info("join point response : {}", joinPoint.getTarget());
+//        log.info("join point response : {}", joinPoint.getThis());
+//
+//        log.info("Returned response from " + joinPoint.getSignature());
     }
 
     @AfterReturning(value = "execution(* com.example.sqldemo..*.*(..))", returning = "o")
     public void afterReturningMethod(JoinPoint joinPoint, Object o) {
-        log.info("After returning response : {}, signature : {}", o, joinPoint.getSignature());
+//        log.info("After returning response : {}, signature : {}", o, joinPoint.getSignature());
     }
 
     @Around(value = "execution(* com.example.sqldemo..*.*(..))")
